@@ -3,7 +3,7 @@ Datasets Analysis in R
 Description:
 
 This project aims to analyze various datasets from Kaggle or other places for the purpose of gaining insights into different aspects of the data, as well as 
-honing my R coding skills through the process of data analysis.he project will continuously be updated by adding new and interesting datasets from Kaggle or 
+honing my R coding skills through the process of data analysis. The project will continuously be updated by adding new and interesting datasets from Kaggle or 
 other sources, and analyzing them using R.
 
 Datasets:
