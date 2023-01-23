@@ -1,0 +1,140 @@
+---
+title: "Data cleaning and visualization"
+author: "Zhiwei Lin"
+date: "2023-01-20"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r}
+library(tidyverse)
+library(skimr)
+library(ggplot2)
+```
+
+
+```{r}
+data <-read.csv('/kaggle/input/netflix-shows/netflix_titles.csv', header =T, na.string=c("","NA"))
+```
+Import Netflix movies and TV shows dataset
+
+```{r}
+head(data) 
+```
+Observe first 6 rows
+
+```{r}
+#convert variable type and rating to factor, and convert date_added to date variable 
+data <- mutate_at(data, vars(type,rating), as.factor) 
+data<-mutate(data,date_added = as.Date(date_added,format="%B %d, %Y"))
+
+```
+
+# Data Summarization
+```{r}
+summary(data)
+```
+```{r}
+skim_without_charts(data) # another summary function
+```
+Take a quick look at the dataset using the summary() and skim_without_charts() functions to get a general overview of the data and identify any potential issues or outliers. From the output of these functions, we observe that there are missing values in the "director", "cast", "country", "duration", "date_added", and "rating" variables. In particular, there are 2634 missing values in the "director" column. Despite the presence of missing values, we will proceed with our analysis and decide whether to drop or impute these missing values as necessary.
+
+```{r}
+data<-data[!duplicated(data$show_id), ] # drop any duplicated value based on show_id
+```
+
+# Data Visualization
+Number & precentage of TV shows and Movies are on Netflix
+```{r}
+df_type<-data %>% 
+  group_by(type) %>% 
+  summarise(
+    count=n()
+  )
+df_type$percentage <- 100*prop.table(df_type$count)
+print(df)
+ggplot(df_type, aes(x="", y=percentage, fill=type)) +
+  geom_bar(width=1,stat="identity") +
+  coord_polar(theta="y", start=0) +
+  theme_void()+
+  labs(title="Pie Chart of Movies VS. TV Shows", fill="Type")+
+   geom_text(aes(label = paste(round(percentage,2), "%")),position = position_stack(vjust = 0.5),color = "black")
+```
+
+Calculates the number of movies and TV shows on Netflix and then plots a pie chart to compare the number of each type in the dataset.
+
+```{r}
+data <- drop_na(data, rating)
+levels(data$rating) # we obsevered that rating has some strange levels such as 66mins, 74mins and 84 mins. These levels are likely to be duration of movies instead of the rating. Hence, these values will be deleted
+```
+```{r}
+data = filter(data, rating != "66 min" & rating != "74 min" & rating != "84 min")
+```
+The "rating" variable contains some incorrect levels, which will be removed. Additionally, all missing values in the "rating" variable will also be dropped as they are believed to be random and not likely to significantly affect the overall distribution of the dataset.
+
+```{r}
+df_type_rating<-data %>% 
+  group_by(type,rating) %>% 
+  summarise(
+    count=n()
+  )
+print(df_type_rating)
+
+ggplot(df_type_rating)+
+  geom_bar(aes(x=rating,y=count,fill=type),stat="identity",position="dodge")+
+  facet_wrap(~type,ncol=1)+
+  labs(title="Number of movies and TV shows are for each rating")
+
+```
+Calculates the number of movies and TV shows for each rating level, and then plots a bar graph to visualize the distribution of each type for each rating level.
+
+```{r}
+df_type_year<-data %>% 
+  group_by(type,date_added) %>% 
+  summarise(
+    count1=n(),
+  )
+
+ggplot(df_type_year,aes(x=date_added,y=count1,gruop=type))+
+  geom_line(aes(linetype=type,color=type))+
+  facet_wrap(~type,ncol=1)+
+  labs(title="Number of movies and TV shows are added to Netflix per year")
+```
+Calculates the number of movies and TV shows added to Netflix each year and then plots a bar graph to visualize the distribution of the number of each type added each year.
+
+
+# World Map
+```{r}
+df<-data %>% 
+  separate_rows(country, sep=", |,") %>% 
+  group_by(country) %>% 
+  summarise(
+    count=n()
+  )
+```
+A new dataframe is created which contains information about which country produced the movies on Netflix, and the number of movies produced by each country is counted.
+
+```{r}
+world <- map_data('world')
+world_map <- left_join(df, world, by = c("country" = "region"))
+not_matched<-world_map[is.na(world_map$long),"country"]
+print(not_matched)
+```
+```{r}
+df$country[df$country == 'East Germany'] <- 'Germany'
+df$country[df$country == 'Hong Kong'] <- 'China'
+df$country[df$country == 'United Kingdom'] <- 'UK'
+df$country[df$country == 'United States'] <- 'USA'
+df$country[df$country == 'Vatican City'] <- 'Vatican'
+df$country[df$country == 'West Germany'] <- 'Germany'
+```
+
+
+```{r}
+world %>% 
+  merge(df, by.x = "region", by.y="country", all.x =T) %>% 
+  arrange(group,order) %>% 
+  ggplot(aes(x=long, y=lat, group = group, fill = count)) + geom_polygon()
+```
+Creates a world map that visualizes the number of movies produced by each country
