@@ -21,9 +21,9 @@ Requirements:
 
 The following R packages and versions:
 
-tidyverse version:	1.3.2
-skimr version:	2.1.5
-ggplot2 version:	3.4.0
+1. tidyverse version:	1.3.2
+2. skimr version:	2.1.5
+3. ggplot2 version:	3.4.0
 
 
 
@@ -35,7 +35,7 @@ ggplot2 version:	3.4.0
 
 
 
-Acknowledgements
+Acknowledgements:
 
 This project uses datasets from Kaggle. The datasets have been obtained from the following links:
 
