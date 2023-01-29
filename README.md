@@ -26,6 +26,7 @@ The following R packages and versions:
 3. ggplot2 version:	3.4.0
 
 Datasets:
+
 [Medical Cost Personal Datasets](https://github.com/stedy/Machine-Learning-with-R-datasets/blob/master/insurance.csv): this dataset comprises 1,338 rows and 7 variables such as age, sex, bmi, number of children, smoker status, region and charges for insurance. The target variable is the cost of insurance claims. 
 
 Goal:
