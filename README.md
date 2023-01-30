@@ -7,12 +7,12 @@ honing my R coding skills through the process of data analysis. The project will
 other sources, and analyzing them using R.  
 
 ## Table of contents:  
-- [Portfolio Projects](#portfolio-projects)
+- [Zhiwei's Portfolio Projects](#portfolio-projects)
 	+ [Netflix movies and TV shows exploratory data analysis](#netflix-movies-and-tv-shows-exploratory-data-analysis)
 	+ [Insurance Cost Regression Analysis](#insurance-cost-regression-analysis)
   + More to come 
 
-## Portfolio Projects:
+## Zhiwei's Portfolio Projects:
 
 ### Netflix movies and TV shows exploratory data analysis:  
 **Dataset:**[Netflix movies and TV shows dataset](https://www.kaggle.com/datasets/shivamb/netflix-shows) This dataset comprises a comprehensive list of movies and 
