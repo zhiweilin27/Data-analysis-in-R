@@ -6,6 +6,14 @@ This project aims to analyze various datasets from Kaggle or other places for th
 honing my R coding skills through the process of data analysis. The project will continuously be updated by adding new and interesting datasets from Kaggle or 
 other sources, and analyzing them using R.  
 
+## Table of contents:  
+- [Portfolio Projects](#portfolio-projects)
+	+ [Netflix movies and TV shows exploratory data analysis](#netflix-movies-and-tv-shows-exploratory-data-analysis)
+	+ [Insurance Cost Regression Analysis](#insurance-cost-regression-analysis)
+  + More to come 
+
+## Portfolio Projects:
+
 ### Netflix movies and TV shows exploratory data analysis:  
 **Dataset:**[Netflix movies and TV shows dataset](https://www.kaggle.com/datasets/shivamb/netflix-shows) This dataset comprises a comprehensive list of movies and 
 TV shows that are currently or have been previously available on Netflix, including details such as cast, directors, ratings, release year, and duration, etc.  
