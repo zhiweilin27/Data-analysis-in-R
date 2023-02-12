@@ -10,7 +10,7 @@ other sources, and analyzing them using R.
 - [Zhiwei's Portfolio Projects](#portfolio-projects)
 	+ [Netflix movies and TV shows exploratory data analysis](#netflix-movies-and-tv-shows-exploratory-data-analysis)
 	+ [Insurance Cost Regression Analysis](#insurance-cost-regression-analysis)
-  + More to come 
+  	+ [Housing Price Prediction](#housing-price-prediction) 
 
 ## Zhiwei's Portfolio Projects:
 
@@ -53,8 +53,19 @@ TV shows that are currently or have been previously available on Netflix, includ
 **Code Output:** [Insurance cost regression output.pdf] (https://github.com/Zhiwei2799/Data-analysis-in-R/blob/main/Insurance%20cost%20regression%20output.pdf)  
 **Result:** The variable smoker is the most significant variable in determining insurance charges, followed by Body Mass Index (BMI) and age. Other factors such as the number of children, region, and sex have minor or no impact on the charges.  
 
+### Housing Price Prediction:  
+**Dataset:** [House Prices](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/data)    
+**Code:** [housing-prediction.rmd](https://github.com/Zhiwei2799/Data-analysis-in-R/blob/main/housing-prediction.rmd).  
+**Goal:**   
+1. Predict housing price  
 
+**Skill:** Linear regression such as Ridge Regression and Lasso Regression 
+**Requirement:** The following R packages and versions:  
+1. tidyverse version: 1.3.2  
+2. glmnet
 
+**Code Output:** [Housing Price output.pdf] (https://github.com/Zhiwei2799/Data-analysis-in-R/blob/main/Housing%20Price.pdf)  
+ 
 
 
 
