@@ -50,7 +50,7 @@ TV shows that are currently or have been previously available on Netflix, includ
 7. RandomForest version: 4.7-1.1  
 8. Caret version: 6.0-93  
 
-**Code Output:** [Insurance cost regression output.pdf] (https://github.com/Zhiwei2799/Data-analysis-in-R/blob/main/Insurance%20cost%20regression%20output.pdf)  
+**Code Output:** [Insurance cost regression output.pdf](https://github.com/Zhiwei2799/Data-analysis-in-R/blob/main/Insurance%20cost%20regression%20output.pdf)  
 **Result:** The variable smoker is the most significant variable in determining insurance charges, followed by Body Mass Index (BMI) and age. Other factors such as the number of children, region, and sex have minor or no impact on the charges.  
 
 ### Housing Price Prediction:  
@@ -64,7 +64,7 @@ TV shows that are currently or have been previously available on Netflix, includ
 1. tidyverse version: 1.3.2  
 2. glmnet
 
-**Code Output:** [Housing Price output.pdf] (https://github.com/Zhiwei2799/Data-analysis-in-R/blob/main/Housing%20Price.pdf)  
+**Code Output:** [Housing Price output.pdf](https://github.com/Zhiwei2799/Data-analysis-in-R/blob/main/Housing%20Price.pdf)  
  
 
 
