@@ -1,0 +1,109 @@
+# %% [code]
+---
+title: "Housing Prices Regression"
+author: "Zhiwei Lin"
+output: pdf_document
+---
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(caret)
+library(glmnet)
+```
+
+### Import data
+```{r}
+train<- read_csv("/kaggle/input/house-prices-advanced-regression-techniques/train.csv")
+test <- read_csv("/kaggle/input/house-prices-advanced-regression-techniques/test.csv")
+```
+
+```{r}
+head(train)
+```
+```{r}
+test$Id <- NULL
+train$Id <- NULL
+test$SalePrice <- NA
+```
+Remove id variable in both data and add SalePrice variable to test_data
+
+```{r}
+all <- rbind(train,test)
+```
+combine train and test data
+
+```{r}
+missing_percentage <- function(df){
+ colSums(is.na(df))/nrow(df)
+}
+missing_percentage(all)
+```
+
+```{r}
+all <- mutate_if(all,is.character,as.factor)
+```
+
+```{r}
+all <- all %>% mutate_if(is.factor, ~ ifelse(is.na(.), 0, .))
+# replace missing values NA with 0 for all categorical variables
+all <- all %>% mutate_if(is.numeric, ~ ifelse(is.na(.), mean(., na.rm = TRUE), .))
+# replcae missing values NA with mean for all numeric variables
+sum(is.na(all))
+# no missing values in the data anymore
+
+```
+
+# ridge regression
+```{r}
+# Split the data into training and test sets
+train_data <- all[1:nrow(train),]
+test_data <- all[(nrow(train)+1):nrow(all),]
+```
+
+```{r}
+library(glmnet)
+set.seed(123)
+
+# Train the model
+x <- model.matrix(SalePrice ~ ., data = train_data)
+y <- train_data$SalePrice
+model_ridge <- glmnet(x, y, alpha = 0, lambda = 1)
+summary(model_ridge)
+```
+```{r}
+cv_model <- cv.glmnet(x, y, alpha = 0)
+best_lambda <- cv_model$lambda.min
+best_lambda
+```
+
+```{r}
+plot(cv_model)
+```
+
+```{r}
+best_model <- glmnet(x, y, alpha = 0, lambda = best_lambda)
+coef(best_model)
+```
+
+```{r}
+# Make predictions on the test data
+x_test <- model.matrix(SalePrice ~ ., data = test_data)
+y_pred <- predict(model_ridge, s=best_lambda, newx = x_test)
+head(y_pred)
+```
+
+
+
+# Lasso regression
+```{r}
+best_model <- glmnet(x, y, alpha = 1, lambda = best_lambda)
+coef(best_model)
+```
+
+```{r}
+#use lasso regression model to predict response value
+head(predict(best_model, s = best_lambda, newx = x_test))
+```
+
+
+
