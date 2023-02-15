@@ -2,11 +2,13 @@
 ---
 title: "Housing Prices Regression"
 author: "Zhiwei Lin"
-output: pdf_document
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
 ---
 ```{r}
 library(tidyverse)
-library(ggplot2)
 library(caret)
 library(glmnet)
 ```
@@ -20,6 +22,7 @@ test <- read_csv("/kaggle/input/house-prices-advanced-regression-techniques/test
 ```{r}
 head(train)
 ```
+
 ```{r}
 test$Id <- NULL
 train$Id <- NULL
@@ -53,57 +56,96 @@ sum(is.na(all))
 
 ```
 
-# ridge regression
+
 ```{r}
-# Split the data into training and test sets
+# Split the data back to training and test sets
 train_data <- all[1:nrow(train),]
 test_data <- all[(nrow(train)+1):nrow(all),]
+test_data$SalePrice <- NA
+```
+
+### Ridge regression
+```{r}
+lambda <- 10^seq(-3, 3, length = 100)
 ```
 
 ```{r}
-library(glmnet)
+# Build the model
 set.seed(123)
-
-# Train the model
-x <- model.matrix(SalePrice ~ ., data = train_data)
-y <- train_data$SalePrice
-model_ridge <- glmnet(x, y, alpha = 0, lambda = 1)
-summary(model_ridge)
-```
-```{r}
-cv_model <- cv.glmnet(x, y, alpha = 0)
-best_lambda <- cv_model$lambda.min
-best_lambda
+ridge <- train(
+  SalePrice ~., data = train_data, method = "glmnet",
+  trControl = trainControl("cv", number = 10),
+  tuneGrid = expand.grid(alpha = 0, lambda = lambda)
+  )
 ```
 
 ```{r}
-plot(cv_model)
+# Model coefficients
+coef(ridge$finalModel, ridge$bestTune$lambda)
 ```
 
 ```{r}
-best_model <- glmnet(x, y, alpha = 0, lambda = best_lambda)
-coef(best_model)
+# Make predictions
+ridge_predictions <- ridge %>% predict(test_data)
+ridge_predictions <- list(unname(ridge_predictions))[[1]]
+head(ridge_predictions)
+```
+
+### Lasso regression
+```{r}
+# Build the model
+set.seed(123)
+lasso <- train(
+  SalePrice ~., data = train_data, method = "glmnet",
+  trControl = trainControl("cv", number = 10),
+  tuneGrid = expand.grid(alpha = 1, lambda = lambda)
+  )
+
 ```
 
 ```{r}
-# Make predictions on the test data
-x_test <- model.matrix(SalePrice ~ ., data = test_data)
-y_pred <- predict(model_ridge, s=best_lambda, newx = x_test)
-head(y_pred)
-```
-
-
-
-# Lasso regression
-```{r}
-best_model <- glmnet(x, y, alpha = 1, lambda = best_lambda)
-coef(best_model)
+# Model coefficients
+coef(lasso$finalModel, lasso$bestTune$lambda)
 ```
 
 ```{r}
-#use lasso regression model to predict response value
-head(predict(best_model, s = best_lambda, newx = x_test))
+# Make predictions
+lasso_predictions <- lasso %>% predict(test_data)
+lasso_predictions <- list(unname(lasso_predictions))[[1]]
+head(lasso_predictions)
 ```
+
+
+
+### elastic net regession
+```{r}
+# Build the model using the training set
+set.seed(123)
+elastic <- train(
+  SalePrice ~., data = train_data, method = "glmnet",
+  trControl = trainControl("cv", number = 10),
+  tuneLength = 10
+  )
+```
+
+```{r}
+# Model coefficients
+coef(elastic$finalModel, elastic$bestTune$lambda)
+```
+
+```{r}
+# Make predictions
+elastic_predictions <- elastic %>% predict(test_data)
+elastic_predictions <- list(unname(elastic_predictions))[[1]]
+head(elastic_predictions)
+```
+
+### Comparing models
+```{r}
+models <- list(ridge = ridge, lasso = lasso, elastic = elastic)
+resamples(models) %>% summary( metric = "RMSE")
+```
+
 
 
 
