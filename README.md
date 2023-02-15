@@ -59,7 +59,7 @@ TV shows that are currently or have been previously available on Netflix, includ
 **Goal:**   
 1. Predict housing price  
 
-**Skill:** Linear regressionL Ridge Regression, Lasso Regression, and elastic net regression.  
+**Skill:** Linear regression(Ridge Regression, Lasso Regression, and elastic net regression).  
 
 **Requirement:** The following R packages and versions:  
 1. tidyverse version: 1.3.2  
