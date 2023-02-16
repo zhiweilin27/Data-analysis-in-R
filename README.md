@@ -17,7 +17,7 @@ other sources, and analyzing them using R.
 ### Netflix movies and TV shows exploratory data analysis:  
 **Dataset:**[Netflix movies and TV shows dataset](https://www.kaggle.com/datasets/shivamb/netflix-shows) This dataset comprises a comprehensive list of movies and 
 TV shows that are currently or have been previously available on Netflix, including details such as cast, directors, ratings, release year, and duration, etc.  
-**Code:**[insurance-cost-regression.rmd](https://github.com/Zhiwei2799/Data-analysis-in-R/blob/main/insurance-cost-regression.rmd).  
+**Code:**[Netflix Content.rmd](https://github.com/Zhiwei2799/Data-analysis-in-R/blob/main/zhiwei-netflix-content-data-analysis.rmd).    
 **Goal:**  
 1. Visualize the number of movies and TV shows available on Netflix.  
 2. Visualize the number of movies and TV shows for each rating.  
