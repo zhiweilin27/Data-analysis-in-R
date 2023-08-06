@@ -1,0 +1,179 @@
+---
+title: "Insurance Cost Regression"
+author: "Zhiwei Lin"
+date: "2023-01-24"
+output: html_document
+---
+- [**Introduction**](#introduction)
+- [**Data Preprocessing**](#data-preprocessing)
+- [**Data Visualization**](#data-visualization)
+- [**Correlation Analysis**](#correlation-analysis)
+- [**Model Selection and Training**](#model-selection-and-training)
+  - [Random Forest](#random-forest-model) 
+  - [Extreme Gradient Boosting(xgboost)](#extreme-gradient-boosting-model) 
+- [**Model Evaluation**](#model-evaluation)
+  - [Random Forest](#random-forest-result)
+  - [Extreme Gradient Boosting(xgboost)](#extreme-gradient-boosting-result)   
+- [**Concolusion**](#conclusion)
+
+# Introduction 
+The goal of this R markdown is to predict insurance costs using medical cost personal datasets provided by [https://github.com/stedy/Machine-Learning-with-R-datasets/blob/master/insurance.csv](https://github.com/stedy/Machine-Learning-with-R-datasets/blob/master/insurance.csv).
+```{r}
+library(tidyverse)
+library(AnalysisLin)
+```
+
+# Data Preprocessing    
+```{r}
+data<-read.csv("/Users/zhiweilin/Downloads/insurance.csv", header =T, na.string=c("","NA"))
+```
+
+```{r}
+desc_stat(data) # desc_stat() is a function from my personal EDA package AnalysisLin. The function is used to generate some key statistics for the dataset. 
+```
+Some data Insights:
+
+- Participants' ages range from 18 to 64, with a mean of 39.22 and a median of 39.
+- Charges range from 1121.874 to 63770.43, with a mean of 13279.12 and a median of 9386.16.
+- A duplicate row exists and should be removed from the dataset.
+- The dataset is free of missing values.
+- Certain non-numerical/categorical variables need encoding: sex, smoker, and region.
+- All numerical variables display Jarque-Bera p-values below 0.05, which implies their kurtosis and skewness are not followed normal distribution. This implies that none of them adhere to a normal distribution.
+
+
+```{r}
+data<-distinct(data) # Remove duplicate rows based on all columns
+```
+
+```{r}
+data <- mutate_at(data, vars(sex,smoker,region), as.factor) 
+```
+The variables ‘sex’, ‘smoker’, and ‘region’ are converted from character variables to factor variables. 
+
+# Data Visualization
+```{r}
+numeric_plot(data,prob=T,dens=T) # numeric_plot() is a function from my personal EDA package AnalysisLin. The function is used to generate histrogram/line plot for all numerical variables. 
+```
+Some takeaways:
+
+-From age distribution plot, age is roughly uniform distributed in the range between 18 to 64.
+-From BMI distribution plot, BMI distribution is a bell shape with a center around 30. 
+-From Children Distribution plot, most participants have children 0-1.
+-From Charge Distribution plot, most participants pay insurance permium around 10000.
+
+```{r}
+categoric_plot(data,n_col = 2,bar_legend = F) # categorical_plot() is a function from my personal EDA package AnalysisLin. The function is used to generate pie/bar plot for all categrical(level) variables. 
+```
+
+Some takeaways:
+
+- From age pie/bar plot, precentage of male and female participants are roughly equal.No bias.  
+- From smoker pie/bar plot, 79.5% of participants are non-smokers, and 20.5% of participants are somkers.    
+- From region pie/bar plot, precentage of participants from each of four regions are roughly equal.No bias.   
+
+# Correlation Analysis
+
+```{r}
+numeric_columns <- sapply(data, is.numeric)
+numeric_data <- data[, numeric_columns]
+corr_matrix(numeric_data,corrplot=T) #corr_matrix() is a function from my personal EDA package, AnalysisLin. The function is used to generated a table of correlation between variables and a plot of correlations.
+
+```
+For numerical variables only, age is most importnat variable in determining insurance permium, followed by bmi. 
+
+```{r}
+corr_cluster(numeric_data)
+```
+
+This is correlation clustering that tells the relationships between four numerical variables. As can be seen, variables age is closest to variable charges.
+
+# Model Selection and Training
+## Random Forest Model
+```{r}
+library(caret)
+library(randomForest)
+```
+
+```{r}
+set.seed(123)
+training.samples <- data$charges %>%
+  createDataPartition(p = 0.8, list = FALSE)
+train.data  <- data[training.samples, ]
+test.data <- data[-training.samples, ]
+```
+split dataset into train and test data, with 80% train data and 20% test data.
+
+```{r}
+set.seed(123)
+rf_model <- train(
+  charges ~., data = train.data, method = "rf",
+  trControl = trainControl("cv", number = 10),
+  importance = TRUE
+  )
+```
+10-fold cross-validation is used
+
+```{r}
+rf_model$bestTune #best set of tuning parameter.
+```
+
+## Extreme Gradient Boosting Model
+```{r}
+library(xgboost)
+```
+
+```{r,warning=FALSE}
+xgb_model <- train(
+  charges ~ ., data = train.data, method = "xgbTree",
+  trControl = trainControl(method = "cv", number = 10),
+  verbosity = 0
+)
+```
+
+```{r}
+xgb_model$bestTune #best set of tuning parameter.
+```
+
+
+# Model Evaluation
+## Random Forest Result
+```{r}
+varImp(rf_model)
+```
+In random forest model, smokeryes is the most significant variable in determining insurance charges, followed by BMI and age. Other factors have minor to no impact on the charges
+```{r}
+varImpPlot(rf_model$finalModel, type = 1)
+```
+
+
+```{r}
+rf_predictions <- rf_model %>% predict(test.data)
+head(rf_predictions)
+```
+
+```{r}
+RMSE(rf_predictions, test.data$charges)
+```
+
+## Extreme Gradient Boosting Result
+```{r}
+varImp(xgb_model)
+```
+In XGBoost model, smokeryes is the most significant variable in determining insurance charges, followed by BMI and age. Other factors have minor to no impact on the charges
+
+```{r}
+xgb_predictions <- xgb_model %>% predict(test.data)
+head(xgb_predictions)
+```
+
+```{r}
+RMSE(xgb_predictions, test.data$charges)
+```
+
+# Conclusion
+Both the Random Forest and XGBoost models yield the same result, such that "smoker," "bmi," and "age" are three crucial variables that determines insurance premiums. However, the XGBoost model outperforms the Random Forest model with a lower Root Mean Squared Error (RMSE). 
+In general, if your dataset is small and you value simplicity, the Random Forest model is a solid choice. Conversely, for larger datasets where predictive accuracy is your goal, the XGBoost model is a better fit.
+
+
+
+
