@@ -403,31 +403,41 @@ medical cost personal datasets provided by <a href="https://github.com/stedy/Mac
 <pre class="r"><code>data&lt;-read.csv(&quot;/Users/zhiweilin/Downloads/insurance.csv&quot;, header =T, na.string=c(&quot;&quot;,&quot;NA&quot;))</code></pre>
 <pre class="r"><code>desc_stat(data) # desc_stat() is a function from my personal EDA package AnalysisLin. The function is used to generate some key statistics for the dataset. </code></pre>
 <pre><code>## Descriptive Statistics Results:
-## =================================</code></pre>
-<pre><code>##          count unique duplicate null null_rate      type      min        p25
-## age       1338     47         1    0         0   integer   18.000   27.00000
-## sex       1338      2         1    0         0 character       NA         NA
-## bmi       1338    548         1    0         0   numeric   15.960   26.29625
-## children  1338      6         1    0         0   integer    0.000    0.00000
-## smoker    1338      2         1    0         0 character       NA         NA
-## region    1338      4         1    0         0 character       NA         NA
-## charges   1338   1337         1    0         0   numeric 1121.874 4740.28715
-##                  mean   median         p75      max           sd kurtosis
-## age         39.207025   39.000    51.00000    64.00    14.049960 1.755079
-## sex                NA       NA          NA       NA           NA       NA
-## bmi         30.663397   30.400    34.69375    53.13     6.098187 2.944977
-## children     1.094918    1.000     2.00000     5.00     1.205493 3.197217
-## smoker             NA       NA          NA       NA           NA       NA
-## region             NA       NA          NA       NA           NA       NA
-## charges  13270.422265 9382.033 16639.91251 63770.43 12110.011237 4.595821
-##            skewness jarque_pvalue
-## age      0.05561008             0
-## sex              NA            NA
-## bmi      0.28372857             0
-## children 0.93732812             0
-## smoker           NA            NA
-## region           NA            NA
-## charges  1.51417971             0</code></pre>
+## =========================================================================
+##               age     sex       bmi      children smoker    region   
+## count         1338    1338      1338     1338     1338      1338     
+## unique        47      2         548      6        2         4        
+## duplicate     1       1         1        1        1         1        
+## null          0       0         0        0        0         0        
+## null_rate     0       0         0        0        0         0        
+## type          integer character numeric  integer  character character
+## min           18      &lt;NA&gt;      15.96    0        &lt;NA&gt;      &lt;NA&gt;     
+## p25           27      &lt;NA&gt;      26.29625 0        &lt;NA&gt;      &lt;NA&gt;     
+## mean          39.207  &lt;NA&gt;      30.6634  1.0949   &lt;NA&gt;      &lt;NA&gt;     
+## median        39      &lt;NA&gt;      30.4     1        &lt;NA&gt;      &lt;NA&gt;     
+## p75           51      &lt;NA&gt;      34.69375 2        &lt;NA&gt;      &lt;NA&gt;     
+## max           64      &lt;NA&gt;      53.13    5        &lt;NA&gt;      &lt;NA&gt;     
+## sd            14.05   &lt;NA&gt;      6.0982   1.2055   &lt;NA&gt;      &lt;NA&gt;     
+## kurtosis      1.7551  &lt;NA&gt;      2.945    3.1972   &lt;NA&gt;      &lt;NA&gt;     
+## skewness      0.0556  &lt;NA&gt;      0.2837   0.9373   &lt;NA&gt;      &lt;NA&gt;     
+## jarque_pvalue 0       &lt;NA&gt;      0        0        &lt;NA&gt;      &lt;NA&gt;     
+##               charges     
+## count         1338        
+## unique        1337        
+## duplicate     1           
+## null          0           
+## null_rate     0           
+## type          numeric     
+## min           1121.8739   
+## p25           4740.28715  
+## mean          13270.4223  
+## median        9382.033    
+## p75           16639.912515
+## max           63770.42801 
+## sd            12110.0112  
+## kurtosis      4.5958      
+## skewness      1.5142      
+## jarque_pvalue 0</code></pre>
 <p>Some data Insights:</p>
 <ul>
 <li>Participants’ ages range from 18 to 64, with a mean of 39.2 and a
