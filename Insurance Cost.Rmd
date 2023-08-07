@@ -33,8 +33,8 @@ desc_stat(data) # desc_stat() is a function from my personal EDA package Analysi
 ```
 Some data Insights:
 
-- Participants' ages range from 18 to 64, with a mean of 39.22 and a median of 39.
-- Charges range from 1121.874 to 63770.43, with a mean of 13279.12 and a median of 9386.16.
+- Participants' ages range from 18 to 64, with a mean of 39.2 and a median of 39.
+- Charges range from 1121.874 to 63770.43, with a mean of 13270.42 and a median of 9382.03.
 - A duplicate row exists and should be removed from the dataset.
 - The dataset is free of missing values.
 - Certain non-numerical/categorical variables need encoding: sex, smoker, and region.
@@ -56,10 +56,10 @@ numeric_plot(data,prob=T,dens=T) # numeric_plot() is a function from my personal
 ```
 Some takeaways:
 
--From age distribution plot, age is roughly uniform distributed in the range between 18 to 64.
--From BMI distribution plot, BMI distribution is a bell shape with a center around 30. 
--From Children Distribution plot, most participants have children 0-1.
--From Charge Distribution plot, most participants pay insurance permium around 10000.
+- From age distribution plot, age is roughly uniform distributed in the range between 18 to 64.
+- From BMI distribution plot, BMI distribution is a bell shape with a center around 30. 
+- From Children Distribution plot, most participants have children 0-1.
+- From Charge Distribution plot, most participants pay insurance permium around 10000.
 
 ```{r}
 categoric_plot(data,n_col = 2,bar_legend = F) # categorical_plot() is a function from my personal EDA package AnalysisLin. The function is used to generate pie/bar plot for all categrical(level) variables. 
